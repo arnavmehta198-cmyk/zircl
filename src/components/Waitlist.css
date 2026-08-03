@@ -1,0 +1,206 @@
+.waitlist {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 26vh 20px 20vh;
+  background: linear-gradient(135deg, #14d406 0%, #cf9a97 52%, #EAB308 100%);
+}
+
+/* Fades the previous section's cream down into the full multi-color
+   gradient, so every colour blends through — not just the green edge. */
+.waitlist::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 22vh;
+  pointer-events: none;
+  background: linear-gradient(180deg, #F5F1E6 0%, rgba(245, 241, 230, 0) 100%);
+}
+
+.waitlist-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 620px;
+}
+
+.waitlist-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(8, 6, 13, 0.6);
+}
+
+.waitlist-title {
+  margin: 0;
+  font-size: clamp(2rem, 5.5vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #08060d;
+}
+
+.waitlist-form {
+  display: flex;
+  gap: 18px;
+  width: 100%;
+  max-width: 520px;
+  margin-top: 12px;
+}
+
+.waitlist-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.waitlist-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.waitlist-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 15px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(8, 6, 13, 0.12);
+  background: rgba(255, 255, 255, 0.92);
+  color: #08060d;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.waitlist-input::placeholder {
+  color: rgba(8, 6, 13, 0.4);
+}
+
+.waitlist-input:focus {
+  border-color: rgba(8, 6, 13, 0.5);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.45);
+}
+
+.waitlist-input.has-error {
+  border-color: #b3261e;
+  box-shadow: 0 0 0 4px rgba(179, 38, 30, 0.18);
+}
+
+.waitlist-button {
+  flex-shrink: 0;
+  padding: 15px 26px;
+  border-radius: 999px;
+  border: none;
+  background: #08060d;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.waitlist-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(8, 6, 13, 0.28);
+}
+
+.waitlist-button:active {
+  transform: translateY(0);
+}
+
+.waitlist-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.waitlist-input:disabled {
+  opacity: 0.7;
+}
+
+/* Honeypot: removed from layout and the a11y tree, but still fillable
+   by bots that blindly complete every input. */
+.waitlist-hp {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.waitlist-button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+.waitlist-success {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 15px 24px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #08060d;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.waitlist-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #14d406;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.waitlist-error {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6d1710;
+}
+
+.waitlist-fine {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(8, 6, 13, 0.55);
+}
+
+@media (max-width: 560px) {
+  .waitlist-form {
+    flex-direction: column;
+  }
+
+  .waitlist-button {
+    width: 100%;
+  }
+}

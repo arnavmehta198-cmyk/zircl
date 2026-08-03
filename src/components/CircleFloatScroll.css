@@ -1,0 +1,55 @@
+.circle-float-section {
+  position: relative;
+  width: 100%;
+}
+
+.circle-float-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-float-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  will-change: opacity;
+}
+
+.circle-float-line {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0 20px;
+  text-align: center;
+  font-size: clamp(2.5rem, 13vw, 11rem);
+  font-weight: 800;
+  color: #08060d;
+  will-change: opacity, transform;
+}
+
+.circle-float-cursor {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.85em;
+  margin-left: 0.05em;
+  background: #08060d;
+  animation: circle-float-blink 0.8s step-end infinite;
+}
+
+@keyframes circle-float-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}

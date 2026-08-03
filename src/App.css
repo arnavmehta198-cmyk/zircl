@@ -1,0 +1,74 @@
+.glass-nav {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 8px 32px rgba(8, 6, 13, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+
+.glass-nav-brand {
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  color: #08060d;
+}
+
+#center {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  justify-content: center;
+  align-items: stretch;
+  flex-grow: 1;
+  min-height: 130svh;
+
+  @media (max-width: 1024px) {
+    padding: 32px 20px 24px;
+    gap: 18px;
+  }
+}
+
+.hero-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-aurora {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, black 0%, black 15%, transparent 60%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 15%, transparent 60%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.zircl-title {
+  position: relative;
+  width: 100%;
+  max-width: 1800px;
+  height: 800px;
+  margin: 0 auto;
+
+  @media (max-width: 1024px) {
+    max-width: 840px;
+    height: 500px;
+  }
+}
+
