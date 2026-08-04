@@ -1,4 +1,5 @@
 import { Users } from 'lucide-react'
+import Reveal from './Reveal'
 import './About.css'
 
 const LONELY_ICONS = Array.from({ length: 5 })
@@ -8,16 +9,16 @@ export default function About() {
   return (
     <section id="about" className="about">
       <div className="about-inner">
-        <span className="about-eyebrow">Why Zircl exists</span>
-        <h2 className="about-title">We're here to solve loneliness.</h2>
-        <p className="about-body">
+        <Reveal as="span" className="about-eyebrow">Why Zircl exists</Reveal>
+        <Reveal as="h2" delay={80} className="about-title">We're here to solve loneliness.</Reveal>
+        <Reveal as="p" delay={160} className="about-body">
           Real connection is harder to find than it should be. Zircl exists to make it easy again —
           matching you with people nearby who actually share what you're into, so meeting up stops
           being the hard part.
-        </p>
+        </Reveal>
 
         <div className="about-stats">
-          <div className="about-stat">
+          <Reveal className="about-stat" delay={240}>
             <div className="about-stat-figure">
               <span className="about-stat-number lonely">1 in 5</span>
               <span className="about-stat-label">people feel lonely every day.</span>
@@ -27,9 +28,9 @@ export default function About() {
                 <Users key={i} className={i === 0 ? 'icon-active lonely' : 'icon-dim'} size={28} strokeWidth={1.5} />
               ))}
             </div>
-          </div>
+          </Reveal>
 
-          <div className="about-stat">
+          <Reveal className="about-stat" delay={320}>
             <div className="about-stat-figure">
               <span className="about-stat-number support">7 in 10</span>
               <span className="about-stat-label">say they lack enough emotional support.</span>
@@ -39,7 +40,7 @@ export default function About() {
                 <Users key={i} className={i < 7 ? 'icon-active support' : 'icon-dim'} size={28} strokeWidth={1.5} />
               ))}
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

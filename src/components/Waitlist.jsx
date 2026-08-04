@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { joinWaitlist } from '../lib/supabase'
+import Reveal from './Reveal'
 import './Waitlist.css'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -61,8 +62,8 @@ export default function Waitlist() {
   return (
     <section className="waitlist" id="waitlist">
       <div className="waitlist-inner">
-        <span className="waitlist-eyebrow">Launching soon</span>
-        <h2 className="waitlist-title">Be first in the circle.</h2>
+        <Reveal as="span" className="waitlist-eyebrow">Launching soon</Reveal>
+        <Reveal as="h2" delay={80} className="waitlist-title">Be first in the circle.</Reveal>
 
         {joined ? (
           <div className="waitlist-success" role="status">

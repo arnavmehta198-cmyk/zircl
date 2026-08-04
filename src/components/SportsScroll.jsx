@@ -13,6 +13,7 @@ import {
   Footprints,
   Volleyball
 } from 'lucide-react'
+import Reveal from './Reveal'
 import './SportsScroll.css'
 
 const photo = id => `https://images.unsplash.com/photo-${id}?w=1600&q=80&auto=format&fit=crop`
@@ -97,7 +98,7 @@ export default function SportsScroll() {
         className="sports-scroll-sticky"
         style={{ transform: `translateY(${exitY}px)`, opacity: exitOpacity }}
       >
-        <p className="sports-scroll-heading">Pick the things you're into, we'll find your people.</p>
+        <Reveal as="p" className="sports-scroll-heading">Pick the things you're into, we'll find your people.</Reveal>
         <div
           ref={trackRef}
           className="sports-scroll-track"
