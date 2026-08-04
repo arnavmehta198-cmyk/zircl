@@ -117,6 +117,8 @@ export default function Waitlist() {
         )}
 
         {!joined && <p className="waitlist-fine">No spam. Just one email when we launch.</p>}
+
+        <p className="waitlist-copyright">&copy; {new Date().getFullYear()} Zircl. All rights reserved.</p>
       </div>
     </section>
   )
