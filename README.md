@@ -37,10 +37,10 @@ The waitlist table has RLS enabled with **no direct-insert policy** — the anon
 2. Deploy the function:
    ```bash
    supabase functions deploy join-waitlist --no-verify-jwt
-   supabase secrets set ALLOWED_ORIGINS=https://your-domain.com
+   supabase secrets set ALLOWED_ORIGINS=https://zircl.org,https://www.zircl.org,http://localhost:5173
    ```
 
-Until both steps are done, the waitlist form will show a generic error on submit.
+Until both steps are done, the waitlist form will show a generic error on submit. `ALLOWED_ORIGINS` is a comma-separated CORS allowlist — update it any time the deployed domain changes.
 
 ## Environment variables
 
