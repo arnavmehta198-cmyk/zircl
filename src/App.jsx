@@ -116,8 +116,6 @@ function App() {
 
       <ScrollVideo />
 
-      <SectionBlend from="#08060d" to="#F5F1E6" />
-
       <LiveStats />
 
       <Waitlist />
