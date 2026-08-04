@@ -5,7 +5,6 @@ import About from './components/About'
 import CircleFloatScroll from './components/CircleFloatScroll'
 import SportsScroll from './components/SportsScroll'
 import ScrollVideo from './components/ScrollVideo'
-import LiveStats from './components/LiveStats'
 import Waitlist from './components/Waitlist'
 import SectionBlend from './components/SectionBlend'
 import './App.css'
@@ -65,9 +64,6 @@ function App() {
           <a href="#activities" onClick={scrollToSection}>
             Activities
           </a>
-          <a href="#stats" onClick={scrollToSection}>
-            Live
-          </a>
           <a href="#waitlist" className="top-nav-cta" onClick={scrollToSection}>
             Join waitlist
           </a>
@@ -115,8 +111,6 @@ function App() {
       <SectionBlend from="#C9A87C" to="#08060d" />
 
       <ScrollVideo />
-
-      <LiveStats />
 
       <Waitlist />
     </>
