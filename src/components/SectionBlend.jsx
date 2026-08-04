@@ -38,15 +38,6 @@ function hslToRgb([h, s, l]) {
   return rgb.map(v => Math.round((v + m) * 255))
 }
 
-// Interpolating tan-into-black straight through RGB drags the color through
-// a flat, muddy brown-grey mid-tone (the two hues partially cancel out).
-// Holding hue/saturation close to the source color and only snapping them
-// over to the target near the very end — while lightness eases the whole
-// way — reads as "the same color getting darker" instead of "graying out".
-function easeHue(t) {
-  return Math.pow(t, 4)
-}
-
 // Zero first AND second derivative at both ends (Perlin's smootherstep) —
 // a plain ease only zeroes the slope, which still leaves a visible kink
 // where the gradient meets each flat neighbor.
@@ -54,23 +45,58 @@ function smootherstep(t) {
   return t * t * t * (t * (t * 6 - 15) + 10)
 }
 
-const STOPS = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+// This palette never uses green/cyan (80-200deg) on purpose — it's not one
+// of the brand hues, so any gradient that transits through it (e.g. a warm
+// dark tone sliding up to a light blue) reads as an unintended green flash.
+// If the short way around the hue wheel crosses that band, go the long way
+// instead (through red/violet), which this palette's other hues actually border.
+const FORBIDDEN_LO = 80
+const FORBIDDEN_HI = 200
 
-function lerpHue(h1, h2, t) {
-  let d = h2 - h1
-  if (d > 180) d -= 360
-  if (d < -180) d += 360
-  return (h1 + d * t + 360) % 360
+function crossesForbidden(h1, d) {
+  for (let i = 1; i < 20; i++) {
+    const h = (h1 + (d * i) / 20 + 360) % 360
+    if (h >= FORBIDDEN_LO && h <= FORBIDDEN_HI) return true
+  }
+  return false
 }
+
+function hueDelta(h1, h2) {
+  let d = ((h2 - h1 + 540) % 360) - 180
+  if (crossesForbidden(h1, d)) {
+    d = d > 0 ? d - 360 : d + 360
+  }
+  return d
+}
+
+// A near-black or near-white color's hue is numerically defined but not
+// visually meaningful — its "chroma" (how much it actually reads as a
+// color rather than a shade of grey) fades to zero at both lightness
+// extremes. Weighting the hue transition toward whichever endpoint has
+// more real chroma means we hold the visible color and snap away from
+// the invisible one, instead of lingering on an arbitrary hue nobody sees.
+function chroma(s, l) {
+  return s * 4 * l * (1 - l)
+}
+
+function huePower(c1, c2) {
+  const r = c1 / (c1 + c2 + 1e-6)
+  return Math.pow(4, 2 * r - 1)
+}
+
+const STOPS = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 
 export default function SectionBlend({ from, to }) {
   const [h1, s1, l1] = rgbToHsl(hexToRgb(from))
   const [h2, s2, l2] = rgbToHsl(hexToRgb(to))
 
+  const d = hueDelta(h1, h2)
+  const p = huePower(chroma(s1, l1), chroma(s2, l2))
+
   const gradient = STOPS.map(t => {
-    const hueT = easeHue(t)
+    const hueT = Math.pow(t, p)
     const lightT = smootherstep(t)
-    const h = lerpHue(h1, h2, hueT)
+    const h = (h1 + d * hueT + 360) % 360
     const s = s1 + (s2 - s1) * hueT
     const l = l1 + (l2 - l1) * lightT
     const rgb = hslToRgb([h, s, l])
