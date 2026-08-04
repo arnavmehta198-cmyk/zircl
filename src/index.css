@@ -1,3 +1,13 @@
+html {
+  /* Every section below drives its own scroll-linked transforms (sticky
+     pins, translateX/Y). The browser's automatic scroll-anchoring fights
+     that — it silently re-scrolls the page when those transforms mutate
+     layout, causing large unexplained jumps after any scrollTo or anchor
+     click. We own scroll position entirely; anchoring has nothing correct
+     to preserve here. */
+  overflow-anchor: none;
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;

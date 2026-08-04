@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Aurora from './components/Aurora'
 import TextPressure from './components/TextPressure'
+import About from './components/About'
 import CircleFloatScroll from './components/CircleFloatScroll'
 import SportsScroll from './components/SportsScroll'
 import ScrollVideo from './components/ScrollVideo'
@@ -8,6 +9,22 @@ import LiveStats from './components/LiveStats'
 import Waitlist from './components/Waitlist'
 import SectionBlend from './components/SectionBlend'
 import './App.css'
+
+// Several sections below run their own scroll listener on every 'scroll'
+// event (sticky scroll-jacked sections) and setState each time. A native
+// smooth-scroll animation fires dozens of scroll events as it animates,
+// and those listeners re-rendering mid-flight reliably cancels the
+// animation (browsers abort smooth scrolling once something else appears
+// to be fighting the scroll position) — the page silently never moves.
+// Instant jump sidesteps that entirely.
+function scrollToSection(e) {
+  const href = e.currentTarget.getAttribute('href')
+  if (!href?.startsWith('#')) return
+  const el = document.querySelector(href)
+  if (!el) return
+  e.preventDefault()
+  el.scrollIntoView({ behavior: 'instant', block: 'start' })
+}
 
 function getZirclFontSize(width) {
   // Below desktop, let TextPressure's own width-based formula size the
@@ -37,8 +54,24 @@ function App() {
 
   return (
     <>
-      <nav className="glass-nav">
-        <span className="glass-nav-brand">ZIRCL</span>
+      <nav className="top-nav">
+        <a className="top-nav-brand" href="#center" onClick={scrollToSection}>
+          ZIRCL
+        </a>
+        <div className="top-nav-links">
+          <a href="#about" onClick={scrollToSection}>
+            About
+          </a>
+          <a href="#activities" onClick={scrollToSection}>
+            Activities
+          </a>
+          <a href="#stats" onClick={scrollToSection}>
+            Live
+          </a>
+          <a href="#waitlist" className="top-nav-cta" onClick={scrollToSection}>
+            Join waitlist
+          </a>
+        </div>
       </nav>
 
       <section id="center" className="hero-section">
@@ -67,7 +100,11 @@ function App() {
         </div>
       </section>
 
-      <SectionBlend from="#ffffff" to="#BFD7F5" />
+      <SectionBlend from="#ffffff" to="#2b2a22" />
+
+      <About />
+
+      <SectionBlend from="#2b2a22" to="#BFD7F5" />
 
       <CircleFloatScroll />
 

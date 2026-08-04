@@ -1,27 +1,69 @@
-.glass-nav {
+html {
+  scroll-padding-top: 76px;
+}
+
+.top-nav {
   position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
   display: flex;
   align-items: center;
-  padding: 12px 28px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.22);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow:
-    0 8px 32px rgba(8, 6, 13, 0.12),
-    inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px clamp(20px, 5vw, 56px);
+  background: rgba(255, 255, 255, 0.16);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 32px rgba(8, 6, 13, 0.08);
   backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
 }
 
-.glass-nav-brand {
+.top-nav-brand {
   font-weight: 800;
   font-size: 15px;
   letter-spacing: 0.08em;
   color: #08060d;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.top-nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3vw, 32px);
+}
+
+.top-nav-links a {
+  font-size: 14px;
+  font-weight: 600;
+  color: #08060d;
+  text-decoration: none;
+  opacity: 0.75;
+  transition: opacity 0.15s ease;
+}
+
+.top-nav-links a:hover {
+  opacity: 1;
+}
+
+.top-nav-cta {
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: #08060d;
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+.top-nav-cta:hover {
+  background: #1a1620;
+}
+
+@media (max-width: 640px) {
+  .top-nav-links a:not(.top-nav-cta) {
+    display: none;
+  }
 }
 
 #center {

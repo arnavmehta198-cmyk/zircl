@@ -89,6 +89,7 @@ export default function SportsScroll() {
   return (
     <section
       ref={sectionRef}
+      id="activities"
       className="sports-scroll-section"
       style={{ height: sectionHeight || undefined }}
     >

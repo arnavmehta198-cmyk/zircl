@@ -67,7 +67,7 @@ export default function LiveStats() {
   }, [stats])
 
   return (
-    <section ref={sectionRef} className="live-stats">
+    <section ref={sectionRef} id="stats" className="live-stats">
       <div className="live-stats-head">
         <span className="live-stats-pulse" />
         <span className="live-stats-eyebrow">Live in your area</span>
