@@ -96,11 +96,11 @@ function App() {
         </div>
       </section>
 
-      <SectionBlend from="#ffffff" to="#2b2a22" />
+      <SectionBlend from="#ffffff" to="#1d2226" />
 
       <About />
 
-      <SectionBlend from="#2b2a22" to="#BFD7F5" />
+      <SectionBlend from="#13120f" to="#BFD7F5" />
 
       <CircleFloatScroll />
 
@@ -111,6 +111,8 @@ function App() {
       <SectionBlend from="#C9A87C" to="#08060d" />
 
       <ScrollVideo />
+
+      <SectionBlend from="#08060d" to="#F5F1E6" />
 
       <Waitlist />
     </>
