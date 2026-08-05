@@ -48,7 +48,7 @@
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
         {
           "key": "Permissions-Policy",
-          "value": "geolocation=(self), microphone=(), camera=(), payment=()"
+          "value": "geolocation=(self), microphone=(self), camera=(), payment=()"
         },
         { "key": "Cross-Origin-Opener-Policy", "value": "same-origin-allow-popups" },
         { "key": "Cross-Origin-Resource-Policy", "value": "same-origin" },
