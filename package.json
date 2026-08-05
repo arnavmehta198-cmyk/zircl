@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm --prefix app install && npm --prefix app run build && rm -rf dist/app && cp -r app/dist dist/app",
+    "build": "vite build && npm --prefix app install && npm run build:app && rm -rf dist/app && cp -r app/dist dist/app",
+    "build:app": "sh scripts/build-app.sh",
     "lint": "oxlint",
     "preview": "vite preview"
   },

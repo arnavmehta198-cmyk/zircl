@@ -64,11 +64,11 @@ function App() {
           <a href="#activities" onClick={scrollToSection}>
             Activities
           </a>
+          <a href="/app" className="top-nav-app">
+            Open the app
+          </a>
           <a href="#waitlist" className="top-nav-cta" onClick={scrollToSection}>
             Join waitlist
-          </a>
-          <a href="/app" className="top-nav-cta">
-            Open the app
           </a>
         </div>
       </nav>

@@ -60,8 +60,28 @@ html {
   background: #1a1620;
 }
 
+/* Outlined, so it reads as a distinct action next to the solid "Join
+   waitlist" pill rather than a second identical black button. */
+.top-nav-app {
+  font-size: 14px;
+  font-weight: 600;
+  color: #08060d;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid rgba(8, 6, 13, 0.35);
+  border-radius: 999px;
+  padding: 7px 16px;
+  opacity: 0.8 !important;
+  transition: opacity 0.15s ease, border-color 0.15s ease;
+}
+
+.top-nav-app:hover {
+  opacity: 1 !important;
+  border-color: rgba(8, 6, 13, 0.7);
+}
+
 @media (max-width: 640px) {
-  .top-nav-links a:not(.top-nav-cta) {
+  .top-nav-links a:not(.top-nav-cta):not(.top-nav-app) {
     display: none;
   }
 }
@@ -73,7 +93,7 @@ html {
   justify-content: center;
   align-items: stretch;
   flex-grow: 1;
-  min-height: 130svh;
+  min-height: 100svh;
 
   @media (max-width: 1024px) {
     padding: 32px 20px 24px;
@@ -101,16 +121,20 @@ html {
   width: 100%;
 }
 
+/* Height is deliberately auto, not a fixed px value. TextPressure sizes its
+   text from the container's WIDTH only (containerW / (chars.length / 2)) and
+   ignores its height unless scale={true}, which we don't use. So any fixed
+   height taller than the rendered glyphs is pure dead space under the word —
+   that was the source of the large empty gap below the hero. */
 .zircl-title {
   position: relative;
   width: 100%;
   max-width: 1800px;
-  height: 800px;
+  height: auto;
   margin: 0 auto;
 
   @media (max-width: 1024px) {
     max-width: 840px;
-    height: 500px;
   }
 }
 

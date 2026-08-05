@@ -1,18 +1,21 @@
 import { supabase } from '../lib/supabase'
 import { FreePlanLimits } from '../lib/types'
 import { dayKey, monthKey } from '../lib/format'
-import { getUser, updateUser } from './users'
 
 // Port of UsageTracker.swift. The counter is a row in usage(uid, metric,
 // period, count) — the period column plays the same role the Firestore
 // "{field}Period" string did: if it doesn't match the current period, the
 // count reads as 0 and gets overwritten. No scheduled reset needed.
+//
+// Everyone gets full access right now — no paid tier is live — so this
+// always reports premium and the caps below never bind. Left in place
+// rather than ripped out, since it's what a real free/paid split plugs
+// back into later.
 
 type Field = 'messages' | 'followRequests' | 'events'
 
-export async function isPremium(uid: string): Promise<boolean> {
-  const u = await getUser(uid)
-  return u?.plan === 'premium'
+export async function isPremium(_uid: string): Promise<boolean> {
+  return true
 }
 
 async function currentCount(uid: string, field: Field, period: string): Promise<number> {
@@ -43,21 +46,3 @@ export const canSendFollowRequest = (uid: string) =>
 
 export const canScheduleEvent = (uid: string) =>
   consume(uid, 'events', FreePlanLimits.monthlyEvents, monthKey())
-
-/** null means unlimited (premium). */
-async function remaining(uid: string, field: Field, limit: number, period: string): Promise<number | null> {
-  if (await isPremium(uid)) return null
-  const used = await currentCount(uid, field, period)
-  return Math.max(0, limit - used)
-}
-
-export const remainingMessagesToday = (uid: string) =>
-  remaining(uid, 'messages', FreePlanLimits.dailyMessages, dayKey())
-export const remainingFollowRequestsToday = (uid: string) =>
-  remaining(uid, 'followRequests', FreePlanLimits.dailyFollowRequests, dayKey())
-export const remainingEventsThisMonth = (uid: string) =>
-  remaining(uid, 'events', FreePlanLimits.monthlyEvents, monthKey())
-
-export async function setPlan(uid: string, plan: 'free' | 'premium') {
-  await updateUser(uid, { plan })
-}

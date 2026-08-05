@@ -1,11 +1,10 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { signInWithPopup } from 'firebase/auth'
-import { motion, useReducedMotion, useScroll, useSpring } from 'motion/react'
+import { motion, useReducedMotion } from 'motion/react'
 import Lenis from 'lenis'
 import { auth, googleProvider } from '../lib/firebase'
 import { Button, EASE, OrbitMark } from '../components/ui'
-import { HOBBIES } from '../lib/types'
 
 // three.js is heavy — code-split so only the landing pays for it.
 const Hero3D = lazy(() => import('../components/Hero3D'))
@@ -61,70 +60,6 @@ function MaskedLines({ lines, delay = 0 }: { lines: { text: string; azure?: stri
     </h1>
   )
 }
-
-const RISE = {
-  initial: { opacity: 0, y: 28 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-80px' },
-} as const
-
-const STEPS = [
-  { n: '01', title: 'Pick your hobbies', body: 'Tennis, board games, hiking — tell Zircl what you actually love doing.' },
-  { n: '02', title: 'See who orbits nearby', body: 'Real people within a couple of miles who share them. Swipe, follow, match.' },
-  { n: '03', title: 'Meet up for real', body: 'Schedule the game, join the club, put your phone away. That’s the point.' },
-]
-
-/**
- * The how-it-works sequence. A hairline trace draws itself down the left rail
- * as the section scrolls through the viewport — the "scan" progressing.
- */
-function StepsSection() {
-  const ref = useRef<HTMLDivElement>(null)
-  const reduce = useReducedMotion()
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.8', 'end 0.55'] })
-  const traceScale = useSpring(scrollYProgress, { stiffness: 90, damping: 24 })
-
-  return (
-    <div ref={ref} className="mx-auto max-w-[1080px] px-6 lg:px-10 pb-24">
-      <motion.div {...RISE} transition={{ duration: 0.5, ease: EASE }}>
-        <div className="eyebrow mb-3">[ HOW IT WORKS ]</div>
-        <h2 className="text-[30px] lg:text-[38px] font-display font-extrabold tracking-[-0.01em]">
-          Three steps. Zero small talk.
-        </h2>
-      </motion.div>
-
-      <div className="mt-10 relative">
-        {/* scroll-driven trace down the number rail */}
-        <motion.div
-          aria-hidden
-          className="absolute left-[10px] top-0 bottom-0 w-px bg-azure origin-top"
-          style={{ scaleY: reduce ? 1 : traceScale }}
-        />
-        {STEPS.map((s, i) => (
-          <motion.div
-            key={s.n}
-            className="grid grid-cols-[56px_minmax(0,280px)_1fr] max-sm:grid-cols-[56px_1fr] gap-x-6 gap-y-1 items-baseline
-                       py-6 border-t border-line first:border-t-0"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ delay: i * 0.1, duration: 0.55, ease: EASE }}
-          >
-            <div className="font-mono text-[14px] font-medium text-ink-3 bg-page relative z-10 pr-2 w-fit">{s.n}</div>
-            <h3 className="text-[19px] font-display font-medium">{s.title}</h3>
-            <p className="text-[14.5px] text-ink-2 leading-relaxed max-sm:col-start-2">{s.body}</p>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-const READOUTS = [
-  '[ SCANNING — 2 MI RADIUS ]',
-  `[ ${HOBBIES.length} HOBBIES INDEXED ]`,
-  '[ 0 VIDEO CALLS — EVER ]',
-]
 
 export default function WelcomeScreen() {
   const navigate = useNavigate()
@@ -216,42 +151,6 @@ export default function WelcomeScreen() {
         </div>
       </div>
 
-      {/* ---- instrument readouts (no fabricated stats) ---- */}
-      <motion.div {...RISE} transition={{ duration: 0.5, ease: EASE }} className="pb-20">
-        <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 px-6">
-          {READOUTS.map((r) => (
-            <span key={r} className="font-mono text-[12px] tracking-[0.08em] text-ink-2">{r}</span>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* ---- how it works: a scan sequence with a scroll-driven trace ---- */}
-      <StepsSection />
-
-      {/* ---- final CTA ---- */}
-      <div className="border-t border-line bg-surface">
-        <div className="mx-auto max-w-[1080px] px-6 lg:px-10 py-20 text-center">
-          <motion.div {...RISE} transition={{ duration: 0.5, ease: EASE }}>
-            <h2 className="text-[28px] lg:text-[34px] font-display font-extrabold tracking-[-0.01em]">
-              The best clubs are the ones you <span className="text-azure">show up to</span>.
-            </h2>
-            <div className="mt-7 flex justify-center">
-              <Button size="lg" onClick={() => navigate('/signup')}>Join Zircl — it's free</Button>
-            </div>
-          </motion.div>
-
-          <div className="mt-16 flex flex-col items-center gap-3 text-[12.5px] text-ink-3">
-            <p className="max-w-[52ch]">
-              Zircl is for meeting in person — first meetups happen in public spots.
-            </p>
-            <div className="flex items-center gap-4">
-              <span>© {new Date().getFullYear()} Zircl</span>
-              <span aria-hidden>·</span>
-              <Link to="/privacy" className="hover:text-ink-2 transition-colors">Privacy Policy</Link>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

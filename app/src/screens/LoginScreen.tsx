@@ -119,7 +119,7 @@ export default function LoginScreen() {
 
         {/* right: the visual */}
         <div className="hidden lg:block relative bg-dusk-950">
-          <img src="/spirals.webp" alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <img src="/app/spirals.webp" alt="" className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-deep/30 via-transparent to-transparent" />
         </div>
       </div>

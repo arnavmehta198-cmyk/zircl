@@ -87,7 +87,8 @@ export function AppProviders({ children }: { children: ReactNode }) {
     hasCompletedOnboarding,
     profile,
     plan,
-    isPremium: plan === 'premium',
+    // Everyone gets full access — no paid tier is live yet. See PremiumScreen.
+    isPremium: true,
     signOut: () => fbSignOut(auth),
     refreshOnboarding: () => setNonce((n) => n + 1),
   }), [user, loadingAuth, hasCompletedOnboarding, profile, plan])

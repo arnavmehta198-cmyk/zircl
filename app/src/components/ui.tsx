@@ -63,21 +63,25 @@ export function Button({
   )
 }
 
-/** Three concentric rings with an orbiting azure dot — the app's signature motif. */
-export function OrbitMark({ size = 32, animate = true }: { size?: number; animate?: boolean }) {
-  const reduce = useReducedMotion()
-  const spin = animate && !reduce
+/** The brand mark — a gray "Z" with nine orbiting people-dots around it. */
+export function OrbitMark({ size = 32 }: { size?: number; animate?: boolean }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden className="shrink-0">
-      <circle cx="16" cy="16" r="15" stroke="#C3CFC6" strokeWidth="1.5" />
-      <circle cx="16" cy="16" r="11" stroke="#94A499" strokeWidth="1.5" />
-      <motion.g
-        style={{ originX: '16px', originY: '16px' }}
-        animate={spin ? { rotate: 360 } : undefined}
-        transition={spin ? { duration: 9, repeat: Infinity, ease: 'linear' } : undefined}
-      >
-        <circle cx="16" cy="5" r="3" fill="#1866DE" />
-      </motion.g>
+    <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden className="shrink-0">
+      <rect x="4" y="4" width="92" height="24" fill="#9A9A9A" />
+      <rect x="4" y="72" width="92" height="24" fill="#9A9A9A" />
+      <polygon points="92,16 74,16 8,84 26,84" fill="#9A9A9A" />
+
+      <circle cx="20" cy="16" r="9" fill="#2E6191" stroke="#fff" strokeWidth="3" />
+      <circle cx="50" cy="16" r="9" fill="#5EB3E4" stroke="#fff" strokeWidth="3" />
+      <circle cx="80" cy="16" r="9" fill="#A6CB3C" stroke="#fff" strokeWidth="3" />
+
+      <circle cx="14" cy="50" r="9" fill="#C2185B" stroke="#fff" strokeWidth="3" />
+      <circle cx="50" cy="50" r="9" fill="#F4CE2A" stroke="#fff" strokeWidth="3" />
+      <circle cx="86" cy="50" r="9" fill="#C1642E" stroke="#fff" strokeWidth="3" />
+
+      <circle cx="20" cy="84" r="9" fill="#A85CA8" stroke="#fff" strokeWidth="3" />
+      <circle cx="50" cy="84" r="9" fill="#3C8D52" stroke="#fff" strokeWidth="3" />
+      <circle cx="80" cy="84" r="9" fill="#8B5E3C" stroke="#fff" strokeWidth="3" />
     </svg>
   )
 }
