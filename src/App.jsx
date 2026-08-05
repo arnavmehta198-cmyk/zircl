@@ -67,6 +67,9 @@ function App() {
           <a href="#waitlist" className="top-nav-cta" onClick={scrollToSection}>
             Join waitlist
           </a>
+          <a href="/app" className="top-nav-cta">
+            Open the app
+          </a>
         </div>
       </nav>
 

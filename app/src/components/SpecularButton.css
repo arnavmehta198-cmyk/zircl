@@ -1,0 +1,71 @@
+.specular-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 24px;
+  border: none;
+  margin: 0;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1;
+  color: #FFF7F2;
+  background: #FF4D6D;
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 4px 16px rgba(255, 77, 109, 0.28);
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.specular-button:hover { background: #E63E5C; }
+.specular-button:active { transform: scale(0.97); }
+
+.specular-button:focus-visible {
+  outline: 2px solid rgba(255, 247, 242, 0.7);
+  outline-offset: 3px;
+}
+
+.specular-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* CSS-only fallback sheen — shown whenever the WebGL shader isn't mounted
+   (reduced motion, or WebGL context creation failed). Static, not animated. */
+.specular-button__sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255, 247, 242, 0.22) 0%, rgba(255, 247, 242, 0) 45%);
+}
+
+/* Once the shader canvas is live, its own rim-light replaces the static sheen. */
+.specular-button--live .specular-button__sheen {
+  opacity: 0;
+}
+
+.specular-button__fx {
+  position: absolute;
+  inset: -20px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.specular-button__fx canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.specular-button__label {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}

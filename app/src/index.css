@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root { height: 100%; }
+  body {
+    @apply bg-page text-ink font-sans antialiased;
+    color-scheme: light;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  ::selection { background: rgba(24, 102, 222, 0.22); color: #152219; }
+
+  :focus-visible { outline: 2px solid #1866DE; outline-offset: 2px; border-radius: 4px; }
+
+  h1, h2, h3 { @apply font-display; text-wrap: balance; }
+  h1 { @apply text-[36px] leading-[1.1] tracking-[-0.02em] font-extrabold; }
+  h2 { @apply text-[28px] leading-[1.15] tracking-[-0.01em] font-extrabold; }
+  h3 { @apply text-[20px] leading-[1.3] font-medium; }
+}
+
+@layer components {
+  .card { @apply bg-surface border border-line rounded-card shadow-card; }
+  .card-hover { @apply transition-all hover:border-line-hi hover:shadow-pop; }
+
+  /* Small-caps mono eyebrow above section titles: [ NEARBY — 1.2 MI RADIUS ] */
+  .eyebrow { @apply font-mono text-[11px] leading-none tracking-[0.1em] uppercase text-ink-3 font-medium; }
+  /* Distances, timestamps, counts — never headings. */
+  .meta { @apply font-mono text-[13px] text-ink-2; }
+
+  /* The one ambient treatment, permitted on Feed and empty states only. */
+  .ambient {
+    background:
+      radial-gradient(700px 500px at 80% -10%, rgba(24, 102, 222, 0.07), transparent 70%),
+      radial-gradient(600px 500px at -10% 110%, rgba(23, 148, 95, 0.05), transparent 70%);
+  }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  .thin-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+  .thin-scroll::-webkit-scrollbar-thumb {
+    background: #C3CFC6; border-radius: 999px;
+    border: 3px solid transparent; background-clip: content-box;
+  }
+  .thin-scroll::-webkit-scrollbar-thumb:hover { background: #94A499; background-clip: content-box; }
+  .thin-scroll::-webkit-scrollbar-track { background: transparent; }
+}
+
+@keyframes pulsering {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.maplibregl-map { height: 100%; width: 100%; background: #F5F8F6; font: inherit; }
+.maplibregl-ctrl-group { background: #FFFFFF !important; border: 1px solid #DDE5DF !important; box-shadow: none !important; }
+.maplibregl-ctrl-group button { background: transparent !important; }
+.maplibregl-ctrl-group button + button { border-top: 1px solid #DDE5DF !important; }
+.maplibregl-ctrl-attrib {
+  background: rgba(255, 255, 255, 0.85) !important;
+  color: #94A499 !important;
+  font-size: 10px !important;
+}
+.maplibregl-ctrl-attrib a { color: #94A499 !important; }
