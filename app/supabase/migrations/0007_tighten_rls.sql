@@ -9,6 +9,42 @@
 -- send a DM, post in a club you belong to, and accept a follow request that
 -- was sent TO you.
 
+-- 0. Only Firebase-issued tokens count as "signed in" ---------------------
+-- Supabase's own email provider is enabled on this project, so anyone can
+-- POST /auth/v1/signup, confirm a throwaway address, and receive a valid
+-- GoTrue JWT. That token has a `sub` too, so firebase_uid() returns non-null
+-- for it and every `firebase_uid() is not null` policy -- including the one
+-- granting SELECT on `users` -- evaluates true. That exposes every user's
+-- latitude/longitude and date_of_birth to someone who never touched Firebase.
+--
+-- Disabling the email provider in the dashboard is the primary fix; this is
+-- defence in depth so the same mistake cannot be reintroduced by a settings
+-- change. RESTRICTIVE policies AND with everything else, so this narrows
+-- access without granting anything.
+-- https://supabase.com/docs/guides/auth/third-party/firebase-auth
+
+create or replace function is_firebase_session() returns boolean
+  language sql stable as $$
+    select auth.jwt()->>'iss' = 'https://securetoken.google.com/zircl-27869'
+       and auth.jwt()->>'aud' = 'zircl-27869'
+  $$;
+
+do $$
+declare t text;
+begin
+  foreach t in array array[
+    'users','conversations','messages','clubs','club_members','events',
+    'blocks','reports','follow_requests','impressions','usage',
+    'message_reactions','message_poll_votes','message_event_attendance'
+  ] loop
+    execute format(
+      'drop policy if exists "firebase issued tokens only" on %I', t);
+    execute format(
+      'create policy "firebase issued tokens only" on %I '
+      'as restrictive to authenticated using (is_firebase_session())', t);
+  end loop;
+end $$;
+
 -- 1. Messages: the sender must be the caller ------------------------------
 -- The old policies gated on conversation/club membership but never on
 -- sender_id, so a participant could insert a message attributed to anyone
