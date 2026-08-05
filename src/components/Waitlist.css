@@ -201,6 +201,17 @@
   color: rgba(8, 6, 13, 0.4);
 }
 
+.waitlist-policy-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s ease;
+}
+
+.waitlist-policy-link:hover {
+  color: rgba(8, 6, 13, 0.85);
+}
+
 @media (max-width: 560px) {
   .waitlist-form {
     flex-direction: column;

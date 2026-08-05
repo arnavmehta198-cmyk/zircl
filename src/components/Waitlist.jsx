@@ -116,9 +116,23 @@ export default function Waitlist() {
           </p>
         )}
 
-        {!joined && <p className="waitlist-fine">No spam. Just one email when we launch.</p>}
+        {!joined && (
+          <p className="waitlist-fine">
+            No spam. Just one email when we launch. See our{' '}
+            <a className="waitlist-policy-link" href="/app/privacy">
+              Privacy&nbsp;Policy
+            </a>
+            .
+          </p>
+        )}
 
-        <p className="waitlist-copyright">&copy; {new Date().getFullYear()} Zircl. All rights reserved.</p>
+        <p className="waitlist-copyright">
+          &copy; {new Date().getFullYear()} Zircl. All rights reserved.
+          {' · '}
+          <a className="waitlist-policy-link" href="/app/privacy">
+            Privacy&nbsp;Policy
+          </a>
+        </p>
       </div>
     </section>
   )

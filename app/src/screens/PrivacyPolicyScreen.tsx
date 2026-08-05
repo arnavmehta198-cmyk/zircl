@@ -3,6 +3,14 @@ import { Icon } from '../components/icons'
 
 const SECTIONS: { title: string; body: string }[] = [
   {
+    title: 'The Waitlist',
+    body:
+      'If you join the waitlist on our marketing site at zircl.org, the only thing we collect is your email ' +
+      'address, plus your IP address briefly, which is used solely to rate-limit signups and stop abuse. We ' +
+      'use your email for one thing: to tell you when Zircl launches. We do not add you to a mailing list, ' +
+      'share it, or sell it. Ask us at the address below and we will delete it.',
+  },
+  {
     title: 'Information We Collect',
     body:
       'When you create a Zircl account we collect the information you give us: your name, email address, ' +
@@ -72,7 +80,7 @@ export default function PrivacyPolicyScreen() {
           <h1 className="text-[32px] font-display font-extrabold tracking-tight leading-tight text-ink">
             Privacy Policy
           </h1>
-          <p className="meta mt-2">Last updated: July 27, 2026</p>
+          <p className="meta mt-2">Last updated: August 5, 2026</p>
 
           <div className="mt-10 flex flex-col gap-9">
             {SECTIONS.map((s) => (
