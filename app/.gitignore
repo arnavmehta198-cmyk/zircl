@@ -8,3 +8,4 @@ dist
 
 functions/lib
 functions/node_modules
+supabase/.temp/
