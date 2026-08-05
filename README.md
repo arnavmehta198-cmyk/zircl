@@ -86,10 +86,22 @@ curl -sI https://zircl.org/    | grep -ci content-security-policy   # 1
 curl -sI https://zircl.org/app | grep -ci content-security-policy   # 1
 ```
 
-**3. The `/app` policy needs more than it looks.** `wss://*.supabase.co` for realtime
-(chat and live updates die silently without it), `worker-src`/`child-src blob:` for
-maplibre's workers, and `Cross-Origin-Opener-Policy: same-origin-allow-popups` because
-Firebase's `signInWithPopup` needs `window.opener` to survive. No `COEP` on `/app`.
+**3. The `/app` policy needs more than it looks.** Every entry below was added because
+something broke without it, and each failure is silent — the page still renders:
+
+- `script-src https://apis.google.com` — Firebase's `signInWithPopup` loads
+  `apis.google.com/js/api.js` to broker the popup. Without it the "Continue with Google"
+  button does nothing at all, with no user-visible error.
+- `frame-src https://apis.google.com` + `https://*.firebaseapp.com` — the auth iframe at
+  `<authDomain>/__/auth/iframe`.
+- `wss://*.supabase.co` — Supabase Realtime. Chat and live updates die silently without it.
+- `worker-src` / `child-src blob:` — maplibre's workers.
+- `Cross-Origin-Opener-Policy: same-origin-allow-popups` — `signInWithPopup` needs
+  `window.opener` to survive; plain `same-origin` severs it and the popup can never hand
+  the result back. No `COEP` on `/app` for the same reason.
+
+To re-check after changing the policy, load `/app/login`, click "Continue with Google",
+and confirm no `securitypolicyviolation` fires.
 
 Assets under `/app` must be referenced as `/app/...`; a bare `/spirals.webp` resolves
 against the landing page root and 404s.
