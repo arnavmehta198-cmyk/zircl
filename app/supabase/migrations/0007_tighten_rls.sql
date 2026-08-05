@@ -67,6 +67,7 @@ end $$;
 drop policy if exists "messages for conversation participants" on messages;
 drop policy if exists "messages for club members" on messages;
 
+drop policy if exists "messages readable by conversation participants" on messages;
 create policy "messages readable by conversation participants" on messages
   for select using (
     conversation_id is not null and exists (
@@ -75,6 +76,7 @@ create policy "messages readable by conversation participants" on messages
     )
   );
 
+drop policy if exists "messages insert by sender in conversation" on messages;
 create policy "messages insert by sender in conversation" on messages
   for insert with check (
     sender_id = firebase_uid()
@@ -93,6 +95,7 @@ create policy "messages insert by sender in conversation" on messages
     )
   );
 
+drop policy if exists "messages readable by club members" on messages;
 create policy "messages readable by club members" on messages
   for select using (
     club_id is not null and exists (
@@ -102,6 +105,7 @@ create policy "messages readable by club members" on messages
     )
   );
 
+drop policy if exists "messages insert by club member" on messages;
 create policy "messages insert by club member" on messages
   for insert with check (
     sender_id = firebase_uid()
@@ -125,10 +129,12 @@ create policy "messages insert by club member" on messages
 -- Previously any conversation participant or club member could delete any
 -- message in the thread; the UI was the only thing hiding the option.
 
+drop policy if exists "messages update by author" on messages;
 create policy "messages update by author" on messages
   for update using (sender_id = firebase_uid())
   with check (sender_id = firebase_uid());
 
+drop policy if exists "messages delete by author" on messages;
 create policy "messages delete by author" on messages
   for delete using (sender_id = firebase_uid());
 
@@ -137,6 +143,7 @@ create policy "messages delete by author" on messages
 -- their own request and appear in the target's friend list uninvited.
 
 drop policy if exists "follow_requests update by parties" on follow_requests;
+drop policy if exists "follow_requests update by recipient" on follow_requests;
 create policy "follow_requests update by recipient" on follow_requests
   for update using (to_uid = firebase_uid())
   with check (to_uid = firebase_uid());
@@ -165,6 +172,7 @@ create policy "club_members self insert" on club_members
 -- "delete account" silently affected zero rows while reporting success.
 -- Cascades let the delete through instead of tripping foreign keys.
 
+drop policy if exists "users delete own row" on users;
 create policy "users delete own row" on users
   for delete using (id = firebase_uid());
 
@@ -191,12 +199,15 @@ alter table message_event_attendance add constraint message_event_attendance_uid
 
 drop policy if exists "events for parties" on events;
 
+drop policy if exists "events readable by parties" on events;
 create policy "events readable by parties" on events
   for select using (firebase_uid() in (creator_id, invitee_id));
 
+drop policy if exists "events insert by creator" on events;
 create policy "events insert by creator" on events
   for insert with check (creator_id = firebase_uid());
 
+drop policy if exists "events respond by invitee" on events;
 create policy "events respond by invitee" on events
   for update using (invitee_id = firebase_uid())
   with check (invitee_id = firebase_uid());
@@ -204,6 +215,7 @@ create policy "events respond by invitee" on events
 -- Either party may remove the event from their own life, and account
 -- deletion (purgeAllData) deletes by creator_id AND invitee_id — restricting
 -- this to the creator would silently orphan rows for invitees.
+drop policy if exists "events delete by parties" on events;
 create policy "events delete by parties" on events
   for delete using (firebase_uid() in (creator_id, invitee_id));
 
@@ -225,6 +237,7 @@ create policy "events delete by parties" on events
 drop policy if exists "message media authenticated update" on storage.objects;
 drop policy if exists "message media authenticated delete" on storage.objects;
 
+drop policy if exists "message media update within own threads" on storage.objects;
 create policy "message media update within own threads" on storage.objects
   for update using (
     bucket_id = 'message-media'
@@ -242,6 +255,7 @@ create policy "message media update within own threads" on storage.objects
     )
   );
 
+drop policy if exists "message media delete within own threads" on storage.objects;
 create policy "message media delete within own threads" on storage.objects
   for delete using (
     bucket_id = 'message-media'
