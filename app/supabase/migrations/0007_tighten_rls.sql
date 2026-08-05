@@ -9,7 +9,18 @@
 -- send a DM, post in a club you belong to, and accept a follow request that
 -- was sent TO you.
 
--- 0. Only Firebase-issued tokens count as "signed in" ---------------------
+-- 0a. Pin search_path on firebase_uid() -----------------------------------
+-- Flagged by Supabase's own security advisor (0011_function_search_path_
+-- mutable). Every RLS policy in this schema calls this function, so leaving
+-- its search_path resolvable at call time is the wrong default even though
+-- the function is not SECURITY DEFINER.
+
+create or replace function firebase_uid() returns text
+  language sql stable
+  set search_path = public, pg_temp
+  as $$ select auth.jwt()->>'sub' $$;
+
+-- 0b. Only Firebase-issued tokens count as "signed in" --------------------
 -- Supabase's own email provider is enabled on this project, so anyone can
 -- POST /auth/v1/signup, confirm a throwaway address, and receive a valid
 -- GoTrue JWT. That token has a `sub` too, so firebase_uid() returns non-null
@@ -24,7 +35,9 @@
 -- https://supabase.com/docs/guides/auth/third-party/firebase-auth
 
 create or replace function is_firebase_session() returns boolean
-  language sql stable as $$
+  language sql stable
+  set search_path = public, pg_temp
+  as $$
     select auth.jwt()->>'iss' = 'https://securetoken.google.com/zircl-27869'
        and auth.jwt()->>'aud' = 'zircl-27869'
   $$;
