@@ -60,6 +60,14 @@ end $$;
 
 -- Counters are written by the trigger under SECURITY DEFINER, so no user
 -- needs direct write access to the usage table for this to work.
+--
+-- Revoke EXECUTE from the client roles. Postgres already refuses a direct
+-- call ("trigger functions can only be called as triggers", SQLSTATE 0A000),
+-- so this is not closing a live hole -- but a SECURITY DEFINER function that
+-- anon can see in the catalogue is the wrong shape, and Supabase's advisor
+-- flags it. Triggers fire regardless of the caller's EXECUTE privilege.
+
+revoke all on function enforce_rate_limit() from public, anon, authenticated;
 
 drop trigger if exists messages_rate_limit on messages;
 create trigger messages_rate_limit
