@@ -1,7 +1,14 @@
 import { supabase } from '../lib/supabase'
 import type { PlanTier, UserProfile } from '../lib/types'
 
-export interface UserRecord extends UserProfile { id: string }
+export interface UserRecord extends UserProfile {
+  id: string
+  /** Server-computed, present only for OTHER users (see publicProfiles).
+   *  Their latitude/longitude and dateOfBirth are never sent to the client,
+   *  so these are the only distance/age available for anyone but yourself. */
+  serverAge?: number | null
+  serverDistanceMiles?: number | null
+}
 
 interface Row {
   id: string
@@ -35,17 +42,66 @@ function fromRow(r: Row): UserRecord {
   }
 }
 
+/** Shape returned by the public_profiles() RPC — deliberately has no
+ *  latitude, longitude or date_of_birth. Distance and age are computed in
+ *  Postgres so the raw values never leave the database. */
+interface PublicRow {
+  id: string
+  name: string
+  bio: string | null
+  photo_url: string | null
+  hobbies: string[] | null
+  age: number | null
+  distance_miles: number | null
+  onboarding_complete: boolean
+  plan: PlanTier
+  created_at: string
+}
+
+function fromPublicRow(r: PublicRow): UserRecord {
+  return {
+    id: r.id,
+    name: r.name,
+    // Not known for other users, and intentionally so. Anything rendering an
+    // age must read serverAge; anything rendering a distance, serverDistanceMiles.
+    dateOfBirth: new Date(0),
+    bio: r.bio ?? '',
+    photoURL: r.photo_url,
+    hobbies: r.hobbies ?? [],
+    latitude: null,
+    longitude: null,
+    notificationsEnabled: false,
+    onboardingComplete: r.onboarding_complete,
+    createdAt: new Date(r.created_at),
+    plan: r.plan,
+    serverAge: r.age,
+    serverDistanceMiles: r.distance_miles,
+  }
+}
+
+async function publicProfiles(
+  ids: string[] | null, cursor: string | null, limit: number,
+): Promise<UserRecord[]> {
+  const { data, error } = await supabase.rpc('public_profiles', {
+    p_ids: ids, p_cursor: cursor, p_limit: limit,
+  })
+  if (error || !data) return []
+  return (data as PublicRow[]).map(fromPublicRow)
+}
+
+/** Your own row comes back in full; RLS hides everyone else's, so for other
+ *  people we fall through to the sanitised RPC. Callers don't need to know
+ *  which of the two they're getting. */
 export async function getUser(uid: string): Promise<UserRecord | null> {
-  const { data, error } = await supabase.from('users').select('*').eq('id', uid).maybeSingle()
-  if (error || !data) return null
-  return fromRow(data as Row)
+  const { data } = await supabase.from('users').select('*').eq('id', uid).maybeSingle()
+  if (data) return fromRow(data as Row)
+  const [row] = await publicProfiles([uid], null, 1)
+  return row ?? null
 }
 
 export async function getUsers(uids: string[]): Promise<UserRecord[]> {
   if (uids.length === 0) return []
-  const { data, error } = await supabase.from('users').select('*').in('id', uids)
-  if (error || !data) return []
-  return (data as Row[]).map(fromRow)
+  return publicProfiles(uids, null, Math.max(uids.length, 1))
 }
 
 export async function createUser(uid: string, fields: {
@@ -94,11 +150,12 @@ export async function deleteUserRow(uid: string): Promise<void> {
 export async function listUsersPage(
   cursor: string | null, n: number,
 ): Promise<{ rows: UserRecord[]; nextCursor: string | null }> {
-  let q = supabase.from('users').select('*').order('created_at', { ascending: false }).limit(n)
-  if (cursor) q = q.lt('created_at', cursor)
-  const { data, error } = await q
-  if (error || !data || data.length === 0) return { rows: [], nextCursor: null }
-  const rows = (data as Row[]).map(fromRow)
-  const nextCursor = data.length === n ? (data[data.length - 1] as Row).created_at : null
+  // Browsing other people goes through the RPC — this is the call that used
+  // to hand out the whole user base's coordinates a page at a time.
+  const rows = await publicProfiles(null, cursor, n)
+  if (rows.length === 0) return { rows: [], nextCursor: null }
+  const nextCursor = rows.length === n
+    ? rows[rows.length - 1].createdAt.toISOString()
+    : null
   return { rows, nextCursor }
 }

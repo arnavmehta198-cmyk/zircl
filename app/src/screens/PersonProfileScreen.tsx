@@ -58,8 +58,13 @@ export default function PersonProfileScreen() {
       if (!alive) return
       if (!target) { setPerson(fromCache()); setLoading(false); return }
 
+      // Another user's coordinates and birth date are no longer sent to the
+      // client; Postgres derives distance and age (see public_profiles). The
+      // client-side branch remains only for rows that still carry raw fields.
       let distance = 1
-      if (typeof target.latitude === 'number' && typeof target.longitude === 'number'
+      if (typeof target.serverDistanceMiles === 'number') {
+        distance = target.serverDistanceMiles
+      } else if (typeof target.latitude === 'number' && typeof target.longitude === 'number'
           && typeof own?.latitude === 'number' && typeof own?.longitude === 'number') {
         distance = milesBetween(own.latitude, own.longitude, target.latitude, target.longitude)
       }
@@ -67,7 +72,7 @@ export default function PersonProfileScreen() {
       setPerson({
         id: target.id,
         name: target.name ?? 'Someone',
-        age: ageFrom(target.dateOfBirth),
+        age: typeof target.serverAge === 'number' ? target.serverAge : ageFrom(target.dateOfBirth),
         gender: 'unknown',
         distanceMiles: distance,
         bio: target.bio ?? '',

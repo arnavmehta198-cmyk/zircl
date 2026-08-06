@@ -81,15 +81,20 @@ export class FeedDeck {
     if (x.id === this.uid || this.blocked.has(x.id)) return null
     if (x.onboardingComplete !== true || !x.name) return null
 
+    // Other users' coordinates and birth dates never reach the client now —
+    // Postgres computes both (see public_profiles). The client-side branch is
+    // kept only for the self/legacy case where the raw fields are present.
     let distance = 1.0
-    if (typeof x.latitude === 'number' && typeof x.longitude === 'number' && this.ownLocation) {
+    if (typeof x.serverDistanceMiles === 'number') {
+      distance = x.serverDistanceMiles
+    } else if (typeof x.latitude === 'number' && typeof x.longitude === 'number' && this.ownLocation) {
       distance = milesBetween(this.ownLocation.lat, this.ownLocation.lon, x.latitude, x.longitude)
     }
 
     return {
       id: x.id,
       name: x.name,
-      age: ageFrom(x.dateOfBirth),
+      age: typeof x.serverAge === 'number' ? x.serverAge : ageFrom(x.dateOfBirth),
       gender: 'unknown', // gender is never stored on the user row
       distanceMiles: distance,
       bio: x.bio ?? '',
